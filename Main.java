@@ -1,81 +1,111 @@
-class Student {
-    private static int studentCounter = 1;
-    private String firstName;
-    private String lastName;
-    private String email;
-    private String address;
-    private String indexNumber;
-    private String status;
-    private int currentSemester;
-    private List<String> subjects = new ArrayList<>();
+import java.util.ArrayList;
+import java.util.List;
 
-    public Student(String firstName, String lastName, String email, String address) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.address = address;
-        this.indexNumber = "s" + studentCounter++;
-        this.status = "candidate";
+class Category {
+    private String name;
+    private List<Product> products;
+
+    // Создаю пустую категорию
+    Category() {
+        this.name = "Main Category";
+        this.products = new ArrayList<>();
     }
 
-    public void enrollStudent() {
-        this.currentSemester = 1;
+    // Создаю категорию с именем
+    Category(String name) {
+        this.name = name;
+        this.products = new ArrayList<>();
     }
 
-    public void addSubject(String subject) {
-        subjects.add(subject);
+    // Создаю категорию с именем и списком продуктов
+    Category(String name, List<Product> products) {
+        this.name = name;
+        this.products = products;
     }
 
-    public void promoteToNextSemester() {
-        if (currentSemester < 7) {
-            currentSemester++;
-            if (currentSemester == 7) {
-                status = "graduate";
-            }
-        }
+    // Добавляем продукты в категорию
+    void addProduct(Product product) {
+        products.add(product);
     }
 
-    public void displayInfo() {
-        System.out.println("Name: " + firstName + " " + lastName);
-        System.out.println("Index Number: " + indexNumber);
-        System.out.println("Status: " + status);
-        System.out.println("Current Semester: " + currentSemester);
-        System.out.println("Email: " + email);
-        System.out.println("Address: " + address);
+    // Удаляем продукты с категории
+    void removeProduct(Product product) {
+        products.remove(product);
     }
 }
 
-class Students {
-    private static List<Student> studentList = new ArrayList<>();
+class ShoppingCart {
+    private List<Product> products;
+    private User user;
 
-    public static void enrollStudent(Student student) {
-        student.enrollStudent();
-        studentList.add(student);
+    // Пустая корзина
+    ShoppingCart() {
+        this.products = new ArrayList<>();
+        this.user = null;
     }
 
-    public static void promoteAllStudents() {
-        for (Student student : studentList) {
-            student.promoteToNextSemester();
-        }
+    // Корзина с юзером
+    ShoppingCart(User user) {
+        this.products = new ArrayList<>();
+        this.user = user;
     }
 
-    public static void displayInfoAboutAllStudents() {
-        for (Student student : studentList) {
-            student.displayInfo();
-            System.out.println();
+    // Корзина с продуктами и юзером
+    ShoppingCart(User user, List<Product> products) {
+        this.products = products;
+        this.user = user;
+    }
+
+    // Тут мы добавляем продукты в корзину
+    void addProduct(Product product) {
+        products.add(product);
+    }
+
+    // Удаляем продукты с корзины
+    void removeProduct(Product product) {
+        products.remove(product);
+    }
+
+    // Считаем сумму товаров в корзине
+    double calculateTotalPrice() {
+        double totalPrice = 0.0;
+        for (Product product : products) {
+            totalPrice += product.getPrice();
         }
+        return totalPrice;
+    }
+
+    // Оплата покупки
+    void pay() {
+        System.out.println("Total Price: $" + calculateTotalPrice());
     }
 }
 
 public class Main {
     public static void main(String[] args) {
-        Student s = new Student("John", "Doe", "doe@wp.pl", "Warsaw, Zlota 12");
-        Students.enrollStudent(s);
+        // Создаем категорию и добавляем в нее продукты
+        Category category1 = new Category("Electronics");
+        Category category2 = new Category("Clothing", List.of(new Product("T-Shirt", 19.99, "C001")));
 
-        s.addSubject("PGO");
-        s.addSubject("APBD");
+        Product laptop = new Product("Laptop", 999.99, "P001");
+        category1.addProduct(laptop);
 
-        Students.promoteAllStudents();
-        Students.displayInfoAboutAllStudents();
+        // Создаю корзину
+        ShoppingCart cart1 = new ShoppingCart(guest1, List.of(product1, product2));
+        ShoppingCart cart2 = new ShoppingCart(user1);
+
+        // Добавляю продукты в корзину
+        cart1.addProduct(product1);
+        cart1.addProduct(product2);
+        cart2.addProduct(product3);
+
+        // Удаляю продукты в корзину
+        cart1.removeProduct(product1);
+
+        // Оплата покупки
+        System.out.println("Cart 1 Total:");
+        cart1.pay();
+        System.out.println("Cart 2 Total:");
+        cart2.pay();
     }
 }
